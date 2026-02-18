@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>O Viajante de Birmingham · Sombras da História</title>
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.4s ease, background-image 0.4s ease;
+            position: relative;
+        }
+
+        /* TEMA MARROM - Viajante de Birmingham */
+        body.theme-viajante {
+            background: #2c1e12;
+            background: radial-gradient(circle at 30% 30%, #5d4a36 0%, #1f150e 90%);
+            color: #f5ede3;
+        }
+
+        body.theme-viajante .card-download,
+        body.theme-viajante .aba.ativa {
+            background: rgba(50, 35, 25, 0.85);
+            border-color: rgba(200, 150, 100, 0.35);
+        }
+
+        body.theme-viajante .botao-download {
+            background: linear-gradient(145deg, #8b6f54, #5e4532);
+            border-color: #d4a373;
+            box-shadow: 0 20px 30px #00000070, 0 0 20px #b48b5a;
+        }
+
+        body.theme-viajante .aba.ativa {
+            background: #8b6f54;
+            border-color: #d4a373;
+            color: white;
+        }
+
+        body.theme-viajante h2 {
+            text-shadow: 0 2px 15px #d4a373, 3px 3px 0 #3a2c1e;
+        }
+
+        body.theme-viajante .autor {
+            border-bottom-color: rgba(200, 180, 150, 0.4);
+        }
+
+        /* TEMA SOMBRAS DA HISTÓRIA - PRETO E AMARELO com faixas policiais */
+        body.theme-sombras {
+            background: #0a0a0a;
+            background: radial-gradient(circle at 20% 40%, #1a1a1a 0%, #000000 90%);
+            color: #f7f0d9;
+            position: relative;
+        }
+
+        /* faixas de polícia no fundo */
+        body.theme-sombras .policia-fitas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        body.theme-sombras .fita-horizontal {
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background: repeating-linear-gradient(
+                45deg,
+                #000000 0px,
+                #000000 20px,
+                #f5c542 20px,
+                #f5c542 40px
+            );
+        }
+
+        body.theme-sombras .fita-vertical {
+            position: absolute;
+            height: 100%;
+            width: 40px;
+            background: repeating-linear-gradient(
+                135deg,
+                #000000 0px,
+                #000000 20px,
+                #f5c542 20px,
+                #f5c542 40px
+            );
+        }
+
+        body.theme-sombras .fita-1 { top: 10%; left: 0; transform: rotate(-2deg); }
+        body.theme-sombras .fita-2 { bottom: 15%; right: 0; transform: rotate(3deg); width: 120%; }
+        body.theme-sombras .fita-3 { top: 0; left: 20%; height: 120%; width: 30px; transform: rotate(4deg); }
+        body.theme-sombras .fita-4 { top: 50%; left: -5%; transform: rotate(-5deg); width: 110%; }
+
+        body.theme-sombras .card-download,
+        body.theme-sombras .aba.ativa {
+            background: rgba(10, 10, 10, 0.85);
+            border-color: #f5c542;
+            backdrop-filter: blur(12px);
+        }
+
+        body.theme-sombras .botao-download {
+            background: linear-gradient(145deg, #1f1f1f, #0a0a0a);
+            border-color: #f5c542;
+            box-shadow: 0 20px 30px #00000070, 0 0 20px #f5c542;
+            color: #f5c542;
+        }
+
+        body.theme-sombras .botao-download i {
+            color: #f5c542;
+        }
+
+        body.theme-sombras .aba.ativa {
+            background: #1f1f1f;
+            border-color: #f5c542;
+            color: #f5c542;
+        }
+
+        body.theme-sombras h2 {
+            text-shadow: 0 2px 15px #f5c542, 3px 3px 0 #000000;
+            color: #f5c542;
+        }
+
+        body.theme-sombras .autor {
+            border-bottom-color: #f5c542;
+            color: #f5c542;
+        }
+
+        body.theme-sombras .descricao {
+            border-left-color: #f5c542;
+        }
+
+        body.theme-sombras .formatos {
+            border-color: #f5c542;
+            color: #f5c542;
+        }
+
+        /* layout principal */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* abas */
+        .abas-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .aba {
+            padding: 0.8rem 1.8rem;
+            background: rgba(20, 30, 40, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 60px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #ccc;
+            font-size: 0.95rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .aba:hover {
+            background: rgba(60, 80, 100, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .aba.ativa {
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .card-download {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid;
+            border-radius: 48px;
+            padding: 2.5rem 2rem 2.8rem;
+            box-shadow: 0 40px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,240,0.1) inset;
+            text-align: center;
+            transition: all 0.3s;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* capa com imagem PNG */
+        .capa-ebook {
+            width: 200px;
+            height: 260px;
+            margin: 0 auto 2rem auto;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s;
+            position: relative;
+            border: 2px solid rgba(255,255,240,0.3);
+        }
+
+        /* capa específica para viajante - SUBSTITUA PELA SUA URL PNG */
+        body.theme-viajante .capa-ebook {
+            background-image: url('capa_viajante.jpeg'); /* Substitua pela URL da capa de O Viajante de Birmingham */
+        }
+
+        /* capa específica para sombras - SUBSTITUA PELA SUA URL PNG */
+        body.theme-sombras .capa-ebook {
+            background-image: url('capa_sombras.jpeg'); /* Substitua pela URL da capa de Sombras da História */
+            border: 2px solid #f5c542;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.9), 0 0 0 3px #f5c542, 0 0 0 6px #0a0a0a, 0 0 30px #ffaa00;
+        }
+
+        /* faixa amarela sem texto na parte inferior da capa (apenas sombras) */
+        body.theme-sombras .capa-ebook::before {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 8px;
+            background: repeating-linear-gradient(90deg, #000000, #000000 8px, #f5c542 8px, #f5c542 16px);
+            border-radius: 30px;
+            border: 1px solid #f5c542;
+            box-shadow: 0 2px 10px black;
+            z-index: 5;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 2.8rem;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 0.3rem;
+        }
+
+        .autor {
+            font-size: 1.3rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            border-bottom: 2px solid;
+            display: inline-block;
+            padding-bottom: 0.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .descricao {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 6px solid currentColor;
+            border-radius: 0 40px 40px 0;
+            padding: 1.6rem 1.8rem;
+            margin: 2rem 0 2.2rem;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 300;
+            box-shadow: 0 10px 20px -5px black;
+        }
+
+        .descricao i {
+            margin-right: 6px;
+        }
+
+        .descricao strong {
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.1rem 0.3rem;
+            border-radius: 12px;
+        }
+
+        .plataformas {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .botao-download {
+            color: white;
+            padding: 1.2rem 1.8rem;
+            border-radius: 80px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+            border: 2px solid;
+            transition: 0.2s;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .botao-download i {
+            font-size: 1.8rem;
+        }
+
+        .botao-download:hover {
+            transform: scale(1.02);
+            filter: brightness(1.2);
+            letter-spacing: 5px;
+        }
+
+        .formatos {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+        }
+
+        .formatos span i {
+            margin-right: 6px;
+        }
+
+        footer {
+            margin-top: 2.8rem;
+            font-size: 0.8rem;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            padding-top: 1.4rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 450px) {
+            .card-download {
+                padding: 1.8rem 1.2rem;
+                border-radius: 32px;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            .autor {
+                font-size: 1rem;
+                letter-spacing: 5px;
+            }
+            .botao-download {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            .capa-ebook {
+                width: 160px;
+                height: 220px;
+            }
+            .aba {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            body.theme-sombras .capa-ebook::before {
+                bottom: -10px;
+                height: 6px;
+            }
+        }
+    </style>
+</head>
+<body class="theme-viajante" id="body-theme">
+    <!-- faixas de polícia (serão exibidas apenas no tema sombras via CSS) -->
+    <div class="policia-fitas">
+        <div class="fita-horizontal fita-1"></div>
+        <div class="fita-horizontal fita-2"></div>
+
+        <div class="fita-horizontal fita-4"></div>
+    </div>
+
+    <div class="container">
+        <!-- abas de navegação - apenas duas -->
+        <div class="abas-container">
+            <div class="aba ativa" data-theme="theme-viajante" data-index="0">O Viajante de Birmingham</div>
+            <div class="aba" data-theme="theme-sombras" data-index="1">Sombras da História</div>
+        </div>
+
+        <!-- card principal do ebook -->
+        <div class="card-download" id="ebookCard">
+            <!-- capa com imagem PNG -->
+            <div class="capa-ebook" id="capaEbook"></div>
+
+            <h2 id="tituloEbook">O VIAJANTE DE BIRMINGHAM</h2>
+            <div class="autor" id="autorEbook">HENRIQUE</div>
+
+            <div class="descricao" id="descricaoEbook">
+                <i class="fas fa-hourglass-half"></i> <strong>Thomas Ward</strong> aperta a mão de um estranho e começa a saltar entre séculos. De Birmingham operária à Guerra Fria, ele descobre que sua jornada é comandada por uma entidade misteriosa.
+            </div>
+
+            <div class="plataformas">
+                <!-- botão de download funcional -->
+                <a class="botao-download" id="botaoDownload" download>
+                    <i class="fas fa-download"></i> BAIXAR EPUB
+                </a>
+                <div class="formatos">
+                    <span><i class="fas fa-file"></i> EPUB (único formato)</span>
+                </div>
+            </div>
+
+            <footer>
+                <span><i class="far fa-copyright"></i> Henrique · 2026</span>
+                <span><i class="fas fa-tag"></i> ficção especulativa / true crime</span>
+                <span><i class="fas fa-globe"></i> 1ª edição digital</span>
+            </footer>
+        </div>
+    </div>
+
+    <!-- elementos decorativos -->
+ 
+
+    <script>
+        // Dados dos ebooks - apenas dois
+        const ebooks = [
+            {
+                titulo: "O VIAJANTE DE BIRMINGHAM",
+                autor: "HENRIQUE",
+                descricao: `<i class="fas fa-hourglass-half"></i> <strong>Thomas Ward</strong> aperta a mão de um estranho e começa a saltar entre séculos. De Birmingham operária à Guerra Fria, ele descobre que sua jornada é comandada por uma entidade misteriosa.`,
+                corTema: "theme-viajante",
+                arquivo: "O Viajante de Birmingham.epub" // nome do arquivo para download
+            },
+            {
+                titulo: "SOMBRAS DA HISTÓRIA",
+                autor: "HENRIQUE",
+                descricao: `<i class="fas fa-skull"></i> <strong>Crimes que marcaram o Brasil</strong>. Casos reais que chocaram o país: PC farias, Rua Cuba e outros assassinatos que entraram para a história. Uma viagem pelos porões da memória nacional.`,
+                corTema: "theme-sombras",
+                arquivo: "Sombras da Historia.epub" // nome do arquivo para download
+            }
+        ];
+
+        const body = document.getElementById('body-theme');
+        const titulo = document.getElementById('tituloEbook');
+        const autor = document.getElementById('autorEbook');
+        const descricao = document.getElementById('descricaoEbook');
+        const botao = document.getElementById('botaoDownload');
+        const abas = document.querySelectorAll('.aba');
+
+        function atualizarEbook(index) {
+            const ebook = ebooks[index];
+            
+            titulo.innerText = ebook.titulo;
+            autor.innerText = ebook.autor;
+            descricao.innerHTML = ebook.descricao;
+            
+            // Atualizar o link de download
+            botao.href = ebook.arquivo;
+            botao.innerHTML = '<i class="fas fa-download"></i> BAIXAR EPUB';
+            
+            // Mudar tema (as capas são atualizadas automaticamente via CSS)
+            body.className = '';
+            body.classList.add(ebook.corTema);
+            
+            // Atualizar abas
+            abas.forEach((aba, i) => {
+                if (i === index) {
+                    aba.classList.add('ativa');
+                } else {
+                    aba.classList.remove('ativa');
+                }
+            });
+        }
+
+        abas.forEach((aba, index) => {
+            aba.addEventListener('click', function() {
+                atualizarEbook(index);
+            });
+        });
+
+        // Inicia com Viajante
+        atualizarEbook(0);
+    </script>
+</body>
+</html>
